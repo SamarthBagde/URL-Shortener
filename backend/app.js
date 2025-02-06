@@ -30,6 +30,33 @@ const shortUrl = async (req, res) => {
   }
 };
 
+const customUrl = async (req, res) => {
+  try {
+    const shortId = req.body.id;
+    const originalUrl = req.body.url;
+
+    const check = await url.findOne({ shortId });
+    if (!check) {
+      await url.create({ shortId, originalUrl });
+
+      res.status(200).json({
+        status: "success",
+        shortUrl: `localhost:3001/${shortId}`,
+      });
+    } else {
+      res.status(409).json({
+        status: "Conflict ",
+        shortUrl: `${shortId} already used.`,
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      status: "falied",
+      error: error,
+    });
+  }
+};
+
 const redirectTorignal = async (req, res) => {
   try {
     const shortId = req.params.id;
@@ -46,6 +73,7 @@ const redirectTorignal = async (req, res) => {
 };
 
 app.route("/shortUrl").post(shortUrl);
+app.route("/customUrl").post(customUrl);
 app.route("/:id").get(redirectTorignal);
 
 module.exports = app;
