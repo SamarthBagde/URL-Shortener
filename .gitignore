@@ -8,6 +8,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # dependencies
+backend/node_modules/
 **/node_modules/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
