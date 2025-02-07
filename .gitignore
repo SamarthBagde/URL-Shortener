@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # dependencies
 backend/node_modules/
+backend/config.env
 **/node_modules/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
