@@ -22,10 +22,15 @@ export default function Home() {
             id="urlInput"
             placeholder="Ex. XYZ"
           />
+          <div className={`submit-btn-container`}>
+            <button className={`submit-btn`} type="submit">
+              Create link
+            </button>
+          </div>
         </div>
-        <div className={`inner-container`}>
-          <div className={`panel-1`}></div>
-          <div className={`panel-2`}></div>
+        <div className={`output-filed`}>
+          <div className={`heading white-text`}>Heading</div>
+          <div className={`text white-text`}>text</div>
         </div>
       </div>
     </div>
