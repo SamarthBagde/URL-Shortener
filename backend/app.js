@@ -8,13 +8,15 @@ app.use(express.json());
 const shortUrl = async (req, res) => {
   try {
     const originalUrl = req.body.url;
-
+    let shortId = req.body.shortId;
     const { customAlphabet } = await import("nanoid"); // dynamic import
     const nanoid = customAlphabet(
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
       6
     );
-    const shortId = nanoid();
+    if (!shortId) {
+      shortId = nanoid();
+    }
 
     await url.create({ shortId, originalUrl });
 
@@ -73,7 +75,7 @@ const redirectTorignal = async (req, res) => {
 };
 
 app.route("/shortUrl").post(shortUrl);
-app.route("/customUrl").post(customUrl);
+// app.route("/customUrl").post(customUrl);
 app.route("/:id").get(redirectTorignal);
 
 module.exports = app;
