@@ -1,11 +1,43 @@
 import React, { useState } from "react";
 import "../styles/Home.css";
+import axios from "axios";
 
 export default function Home() {
   const [url, setUrl] = useState("");
-  const [backHalf, setBackHalf] = useState("");
+  const [shortId, setShortId] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorFlag, setErrorFlag] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    setErrorFlag(false);
+    let param;
+    if (shortId.trim()) {
+      param = {
+        url,
+        shortId,
+      };
+    } else {
+      param = { url };
+    }
+
+    try {
+      const resp = await axios.post("/shortUrl", param);
+      if (resp.status === 200) {
+        setShortUrl(resp.data.shortUrl);
+        setErrorMsg("");
+      } else {
+        errorFlag(true);
+        setErrorMsg(resp.data.error);
+      }
+
+      setShortId("");
+      setUrl("");
+    } catch (error) {
+      setErrorFlag(true);
+      setErrorMsg(error.response.data.message);
+    }
   };
 
   return (
@@ -17,8 +49,9 @@ export default function Home() {
             className={`input-1`}
             type="text"
             name="urlInput"
-            id="urlInput"
+            shortId="urlInput"
             placeholder="https://example.com/short-url"
+            // value={url}
             onChange={(e) => {
               setUrl(e.target.value);
             }}
@@ -31,10 +64,11 @@ export default function Home() {
             className={`input-2`}
             type="text"
             name="urlInput"
-            id="urlInput"
+            shortId="urlInput"
             placeholder="Ex. XYZ"
+            // value={shortId}
             onChange={(e) => {
-              setBackHalf(e.target.value);
+              setShortId(e.target.value);
             }}
             autoComplete="off"
           />
@@ -45,8 +79,19 @@ export default function Home() {
           </div>
         </form>
         <div className={`output-filed`}>
-          <div className={`heading white-text`}>Heading</div>
-          <div className={`text white-text`}>text</div>
+          {errorFlag ? (
+            <div>
+              <div className={`heading red-text`}>Error!!</div>
+              <div className={`text red-text`}>{errorMsg ? errorMsg : ""}</div>
+            </div>
+          ) : (
+            <div>
+              <div className={`heading white-text`}>Short URL</div>
+              <div className={`text white-text`}>
+                {shortUrl ? shortUrl : ""}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
