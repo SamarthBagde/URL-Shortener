@@ -12,6 +12,9 @@ export default function Home() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setErrorFlag(false);
+    if (!url.trim()) {
+      return;
+    }
     let param;
     if (shortId.trim()) {
       param = {
@@ -31,6 +34,7 @@ export default function Home() {
         errorFlag(true);
         setErrorMsg(resp.data.error);
       }
+      console.log(resp);
 
       setShortId("");
       setUrl("");
@@ -51,7 +55,7 @@ export default function Home() {
             name="urlInput"
             shortId="urlInput"
             placeholder="https://example.com/short-url"
-            // value={url}
+            value={url}
             onChange={(e) => {
               setUrl(e.target.value);
             }}
@@ -66,7 +70,7 @@ export default function Home() {
             name="urlInput"
             shortId="urlInput"
             placeholder="Ex. XYZ"
-            // value={shortId}
+            value={shortId}
             onChange={(e) => {
               setShortId(e.target.value);
             }}

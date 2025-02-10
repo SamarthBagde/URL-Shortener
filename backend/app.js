@@ -45,7 +45,7 @@ const shortUrl = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      shortUrl: `localhost:3001/${shortId}`,
+      shortUrl: `localhost:3000/${shortId}`,
     });
   } catch (error) {
     res.status(501).json({
@@ -55,44 +55,27 @@ const shortUrl = async (req, res) => {
   }
 };
 
-const customUrl = async (req, res) => {
-  try {
-    const shortId = req.body.id;
-    const originalUrl = req.body.url;
-
-    const check = await url.findOne({ shortId });
-    if (!check) {
-      await url.create({ shortId, originalUrl });
-
-      res.status(200).json({
-        status: "success",
-        shortUrl: `localhost:3001/${shortId}`,
-      });
-    } else {
-      res.status(409).json({
-        status: "Conflict ",
-        shortUrl: `${shortId} already used.`,
-      });
-    }
-  } catch (error) {
-    res.status(501).json({
-      status: "falied",
-      error: error,
-    });
-  }
-};
-
 const redirectTorignal = async (req, res) => {
   try {
     const shortId = req.params.id;
     const data = await url.findOne({ shortId });
+
+    if (!data) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Page not found",
+      });
+    }
     const originalUrl = data.originalUrl;
 
-    res.redirect(originalUrl);
+    res.status(200).json({
+      status: "success",
+      originalUrl: originalUrl,
+    });
   } catch (error) {
     res.status(501).json({
-      status: "falied",
-      error: error,
+      status: "failed",
+      error: error.message,
     });
   }
 };
