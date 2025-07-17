@@ -5,6 +5,7 @@ import { AppError } from "../Utils/appError.js";
 export const createShortUrl = asyncHandler(async (req, res, next) => {
   const originalUrl = req.body.url;
   let shortId = req.body.shortId;
+  const userId = req.user._id;
 
   const { customAlphabet } = await import("nanoid"); // dynamic import
   const nanoid = customAlphabet(
@@ -20,7 +21,7 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
     return next(new AppError("URL is required", 400));
   }
 
-  const data = await url.create({ shortId, originalUrl });
+  const data = await url.create({ shortId, originalUrl, userId });
 
   res.status(200).json({
     status: "success",
