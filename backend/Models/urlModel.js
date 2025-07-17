@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import validator from "validator";
 
 const urlSchema = mongoose.Schema({
   shortId: {
@@ -12,9 +13,10 @@ const urlSchema = mongoose.Schema({
     type: String,
     require: [true, "original URL is missing."],
     allowNull: false,
+    validate: [validator.isURL, "Please enter a valid URL"],
   },
 });
 
 const url = mongoose.model("url", urlSchema);
 
-module.exports = url;
+export default url;
