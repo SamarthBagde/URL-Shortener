@@ -11,7 +11,7 @@ const sendError = (err, res) => {
     console.log(err);
     res.status(500).json({
       status: "error",
-      message: "Something went wrong ",
+      message: "Something went wrong",
     });
   }
 };
