@@ -1,13 +1,13 @@
-import url from "../Models/urlModel.js";
+import urlModel from "../Models/urlModel.js";
 import { asyncHandler } from "../Middlewares/asyncHandler.js";
 import { AppError } from "../Utils/appError.js";
+import { customAlphabet } from "nanoid";
 
 export const createShortUrl = asyncHandler(async (req, res, next) => {
   const originalUrl = req.body.url;
   let shortId = req.body.shortId;
   const userId = req.user._id;
 
-  const { customAlphabet } = await import("nanoid"); // dynamic import
   const nanoid = customAlphabet(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
     6
@@ -21,7 +21,7 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
     return next(new AppError("URL is required", 400));
   }
 
-  const data = await url.create({ shortId, originalUrl, userId });
+  const data = await urlModel.create({ shortId, originalUrl, userId });
 
   res.status(200).json({
     status: "success",
@@ -32,9 +32,9 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const redirectTorignal = asyncHandler(async (req, res) => {
-  const shortId = req.params.id;
-  const data = await url.findOne({ shortId });
+export const redirectTorignal = asyncHandler(async (req, res, next) => {
+  const shortId = req.params.shortId;
+  const data = await urlModel.findOne({ shortId });
 
   if (!data) {
     return next(new AppError("Page not found", 404));
@@ -47,13 +47,72 @@ export const redirectTorignal = asyncHandler(async (req, res) => {
 });
 
 export const getAllhortUrl = asyncHandler(async (req, res, next) => {
-  const data = await url.find();
+  const urls = await urlModel.find();
   res.status(200).json({
     status: "success",
+    total: urls.length,
     data: {
-      data,
+      urls,
     },
   });
 });
 
-export const getUserhortUrl = (req, res, next) => {};
+export const getUserhortUrl = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const urls = await urlModel.find({ userId });
+
+  res.status(200).json({
+    status: "success",
+    total: urls.length,
+    data: {
+      urls,
+    },
+  });
+});
+
+export const updateUrl = asyncHandler(async (req, res, next) => {
+  const urlId = req.params.urlId;
+  const { newUrl } = req.body;
+  const userId = req.user._id;
+
+  if (!newUrl) {
+    return next(new AppError("Please enter url", 400));
+  }
+
+  const url = await urlModel.findOne({ _id: urlId, userId });
+
+  if (!url) {
+    return next(
+      new AppError("URL not found or you do not have permission", 403)
+    );
+  }
+
+  url.originalUrl = newUrl;
+  await url.save();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      url,
+    },
+  });
+});
+
+export const deleteUrl = asyncHandler(async (req, res, next) => {
+  const urlId = req.params.urlId;
+  const userId = req.user._id;
+
+  const url = await urlModel.findOneAndDelete({ _id: urlId, userId });
+
+  if (!url) {
+    return next(
+      new AppError("URL not found or you do not have permission", 403)
+    );
+  }
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
