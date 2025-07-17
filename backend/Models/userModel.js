@@ -7,6 +7,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     minLength: [3, "Username must be at least 3 characters long."],
+    match: [
+      /^[a-zA-Z0-9]+$/,
+      "Username must contain only letters and numbers.",
+    ],
   },
   email: {
     type: String,
@@ -15,7 +19,7 @@ const userSchema = mongoose.Schema({
     validate: [validator.isEmail, "Please provide a valid email address."],
   },
   password: {
-    type: string,
+    type: String,
     required: true,
     minLength: [8, "Password must be at least 8 characters long."],
     select: false,
@@ -31,14 +35,14 @@ const userSchema = mongoose.Schema({
       message: "Passwords do not match.",
     },
   },
-  passwordChangeAt: Date,
-  passwordResteToken: String,
-  passwordResteTokenExpire: Date,
+  // passwordChangeAt: Date,
+  // passwordResteToken: String,
+  // passwordResteTokenExpire: Date,
 });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
 
   this.password = await bcryptjs.hash(this.password, 12);

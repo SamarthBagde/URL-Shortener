@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const urlSchema = mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "user",
+    required: true,
+  },
   shortId: {
     type: String,
     require: [true, "short id is not there."],

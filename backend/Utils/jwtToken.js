@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const signToken = (id) => {
-  return jwt.sign(id, process.env.JWT_SECRET_KEY, {
+  return jwt.sign({ id: id }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -15,7 +15,7 @@ export const sendToken = (user, statusCode, res) => {
   };
 
   user.password = undefined;
-  res.statusCode(statusCode).cookie("token", token, cookieOptions).json({
+  res.status(statusCode).cookie("token", token, cookieOptions).json({
     status: "success",
     token,
     data: {
