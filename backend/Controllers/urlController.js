@@ -2,6 +2,7 @@ import urlModel from "../Models/urlModel.js";
 import { asyncHandler } from "../Middlewares/asyncHandler.js";
 import { AppError } from "../Utils/appError.js";
 import { customAlphabet } from "nanoid";
+import redisClient from "../Config/redisCilent.js";
 
 export const createShortUrl = asyncHandler(async (req, res, next) => {
   const originalUrl = req.body.url;
@@ -34,11 +35,33 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
 
 export const redirectTorignal = asyncHandler(async (req, res, next) => {
   const shortId = req.params.shortId;
+
+  //first check in cache
+
+  const cachedUrl = await redisClient.get(`shortId:${shortId}`);
+
+  //if hit return res
+
+  if (originalUrl) {
+    return res.status(200).json({
+      status: "success",
+      type: "cached data",
+      originalUrl: cachedUrl,
+    });
+  }
+
+  //if miss get data from db
   const data = await urlModel.findOne({ shortId });
 
   if (!data) {
     return next(new AppError("Page not found", 404));
   }
+
+  //store in cache for future use
+
+  await redisClient.set(`shortId:${shortId}`, data.originalUrl, "EX", 3600); // 1 hour TTL -> 3600 sec
+
+  //return res
 
   res.status(200).json({
     status: "success",
@@ -90,6 +113,7 @@ export const updateUrl = asyncHandler(async (req, res, next) => {
 
   url.originalUrl = newUrl;
   await url.save();
+  await redisClient.del(`shortId:${url.shortId}`); // invalidating the cache for that url
 
   res.status(200).json({
     status: "success",
