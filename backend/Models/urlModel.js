@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const urlSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: "user",
@@ -14,7 +18,7 @@ const urlSchema = mongoose.Schema({
     unique: true,
   },
 
-  originalUrl: {
+  destinationUrl: {
     type: String,
     require: [true, "original URL is missing."],
     allowNull: false,

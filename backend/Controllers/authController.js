@@ -26,3 +26,20 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   next();
 });
+
+export const authUser = asyncHandler(async (req, res, next) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return next(new AppError("Authentication failed", 401));
+  }
+
+  const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const user = await userModel.findById(decode.id);
+
+  res.status(200).json({
+    status: "success",
+    authenticated: true,
+    user,
+  });
+});

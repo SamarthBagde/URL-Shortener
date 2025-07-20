@@ -5,9 +5,14 @@ import { customAlphabet } from "nanoid";
 import redisClient from "../Config/redisCilent.js";
 
 export const createShortUrl = asyncHandler(async (req, res, next) => {
-  const originalUrl = req.body.url;
-  let shortId = req.body.shortId;
+  const destinationUrl = req.body.destinationUrl;
+  const title = req.body.title;
+  let shortId = req.body.backHalf;
   const userId = req.user._id;
+
+  shortId = shortId.trim();
+
+  shortId = shortId.replace(" ", "-");
 
   const nanoid = customAlphabet(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
@@ -18,11 +23,18 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
     shortId = nanoid();
   }
 
-  if (!originalUrl) {
-    return next(new AppError("URL is required", 400));
+  if (!destinationUrl || !title) {
+    return next(
+      new AppError("Please provide both destination url and title", 400)
+    );
   }
 
-  const data = await urlModel.create({ shortId, originalUrl, userId });
+  const data = await urlModel.create({
+    title,
+    shortId,
+    destinationUrl,
+    userId,
+  });
 
   res.status(200).json({
     status: "success",
@@ -42,11 +54,11 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
 
   //if hit return res
 
-  if (originalUrl) {
+  if (cachedUrl) {
     return res.status(200).json({
       status: "success",
-      type: "cached data",
-      originalUrl: cachedUrl,
+      type: "cached",
+      destinationUrl: cachedUrl,
     });
   }
 
@@ -59,13 +71,13 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
 
   //store in cache for future use
 
-  await redisClient.set(`shortId:${shortId}`, data.originalUrl, "EX", 3600); // 1 hour TTL -> 3600 sec
+  await redisClient.set(`shortId:${shortId}`, data.destinationUrl, "EX", 3600); // 1 hour TTL -> 3600 sec
 
   //return res
 
   res.status(200).json({
     status: "success",
-    originalUrl: data.originalUrl,
+    destinationUrl: data.destinationUrl,
   });
 });
 
@@ -80,10 +92,30 @@ export const getAllhortUrl = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const getUserhortUrl = asyncHandler(async (req, res, next) => {
-  const userId = req.user._id;
+export const getUserShortUrl = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id.toString(); // ensure it's a string
 
+  // 1. Try to get from Redis
+  const cachedUrls = await redisClient.get(`user:urls:${userId}`);
+
+  if (cachedUrls) {
+    // 2. If present, return cached data
+    const urls = JSON.parse(cachedUrls);
+    return res.status(200).json({
+      status: "success",
+      type: "cached",
+      total: urls.length,
+      data: {
+        urls,
+      },
+    });
+  }
+
+  // 3. Else, get from MongoDB
   const urls = await urlModel.find({ userId });
+
+  // 4. Save to Redis (cache for 5 mins)
+  await redisClient.set(`user:urls:${userId}`, JSON.stringify(urls), "EX", 300);
 
   res.status(200).json({
     status: "success",
@@ -96,12 +128,12 @@ export const getUserhortUrl = asyncHandler(async (req, res, next) => {
 
 export const updateUrl = asyncHandler(async (req, res, next) => {
   const urlId = req.params.urlId;
-  const { newUrl } = req.body;
+  const { newDestinationUrl, newTitle } = req.body;
   const userId = req.user._id;
 
-  if (!newUrl) {
-    return next(new AppError("Please enter url", 400));
-  }
+  // if (!newDestinationUrl) {
+  //   return next(new AppError("Please enter url", 400));
+  // }
 
   const url = await urlModel.findOne({ _id: urlId, userId });
 
@@ -111,9 +143,17 @@ export const updateUrl = asyncHandler(async (req, res, next) => {
     );
   }
 
-  url.originalUrl = newUrl;
+  if (newDestinationUrl) {
+    url.destinationUrl = newDestinationUrl;
+  }
+
+  if (newTitle) {
+    url.title = newTitle;
+  }
+
   await url.save();
   await redisClient.del(`shortId:${url.shortId}`); // invalidating the cache for that url
+  await redisClient.del(`user:urls:${userId}`);
 
   res.status(200).json({
     status: "success",
@@ -128,6 +168,7 @@ export const deleteUrl = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
 
   const url = await urlModel.findOneAndDelete({ _id: urlId, userId });
+  await redisClient.del(`shortId:${url.shortId}`);
 
   if (!url) {
     return next(

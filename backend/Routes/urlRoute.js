@@ -3,7 +3,7 @@ import {
   redirectTorignal,
   createShortUrl,
   getAllhortUrl,
-  getUserhortUrl,
+  getUserShortUrl,
   updateUrl,
   deleteUrl,
 } from "../Controllers/urlController.js";
@@ -12,10 +12,10 @@ import { protect } from "../Controllers/authController.js";
 const urlRouter = express.Router();
 
 urlRouter.get("/", getAllhortUrl);
-urlRouter.get("/user-urls", protect, getUserhortUrl);
+urlRouter.get("/user-urls", protect, getUserShortUrl);
 urlRouter.post("/shortUrl", protect, createShortUrl);
 urlRouter.get("/:shortId", redirectTorignal);
-urlRouter.patch("/:urlId", protect, updateUrl);
-urlRouter.delete("/:urlId", protect, deleteUrl);
+urlRouter.patch("/update/:urlId", protect, updateUrl);
+urlRouter.delete("/delete/:urlId", protect, deleteUrl);
 
 export default urlRouter;

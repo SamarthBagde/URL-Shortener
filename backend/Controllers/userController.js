@@ -28,7 +28,7 @@ export const register = asyncHandler(async (req, res, next) => {
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
+  if (!email.trim() || !password.trim()) {
     return next(new AppError("All fields are required", 400));
   }
 
@@ -45,6 +45,13 @@ export const login = asyncHandler(async (req, res, next) => {
 
   sendToken(user, 200, res);
 });
+
+export const logout = (req, res, next) => {
+  res
+    .status(200)
+    .cookie("token", "", { expire: new Date() })
+    .json({ status: "success", message: "Logged out successfully" });
+};
 
 export const getUsers = asyncHandler(async (req, res, next) => {
   const users = await userModel.find();
