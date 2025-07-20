@@ -1,8 +1,8 @@
 # URL-Shortener 🔗
 
-# 🔗 URL Shortener (MERN + Redis + Docker + EC2)
+# 🔗 URL Shortener (MERN + Redis)
 
-A minimal, full-stack URL Shortener application built with the MERN stack, and Redis caching.
+A minimal, full-stack URL Shortener application built with the MERN stack and Redis caching.
 
 ## 🚀 Features
 
