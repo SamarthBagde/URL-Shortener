@@ -1,0 +1,132 @@
+/* Overall Page Background */
+body {
+  margin: 0;
+  padding: 0;
+  /* background: linear-gradient(135deg, #6a11cb, #2575fc); */
+  /* color: #333333; */
+}
+
+/* INFO SECTION */
+.infoContainer {
+  padding: 60px 20px;
+  max-width: 85%;
+  margin: 50px auto 0 auto;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 1s ease-in-out;
+}
+.infoContainer h2 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #2575fc;
+  margin-bottom: 18px;
+}
+
+.infoContainer p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333333;
+}
+
+/* FORM SECTION */
+.urlCreateForm {
+  margin: 60px auto;
+  max-width: 600px;
+  padding: 40px 30px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  animation: slideUp 1s ease-in-out;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.inputField p {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333333;
+}
+
+.inputField input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid #cccccc;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+}
+
+.inputField input:focus {
+  outline: none;
+  border-color: #2575fc;
+  box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+}
+
+/* SUBMIT BUTTON */
+.generateBtn {
+  width: 100%;
+  background-color: #2575fc;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.generateBtn:hover {
+  background-color: #1a5fd2;
+}
+
+.messageConatiner {
+  display: flex;
+  justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .infoContainer {
+    max-width: 90%;
+    padding: 40px 16px;
+  }
+
+  .urlCreateForm {
+    padding: 30px 20px;
+    margin: 40px 20px;
+  }
+
+  button {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+}

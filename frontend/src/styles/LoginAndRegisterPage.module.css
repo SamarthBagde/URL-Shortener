@@ -1,0 +1,125 @@
+/* Reset and base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container styles */
+.mainContainer {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Left container for desktop view */
+.leftContainer {
+  flex: 1;
+  background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+  display: none; /* hidden on small screens */
+}
+
+/* Right container that centers the form */
+.rightContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  flex-direction: column;
+}
+
+/* Form styling */
+.formConatiner {
+  width: 100%;
+  max-width: 400px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input field container */
+.inputFiled {
+  margin-bottom: 20px;
+}
+
+.inputFiled p {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.inputFiled input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* Show/hide password button */
+.passwordShowBtn {
+  cursor: pointer;
+  margin-bottom: 20px;
+  color: #2575fc;
+  font-size: 0.9rem;
+  text-align: right;
+  user-select: none;
+}
+
+/* Submit button */
+.logRegBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: #2575fc;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logRegBtn:hover {
+  background-color: #1a5fd2;
+}
+
+.switchMsg {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.switcBtn {
+  display: inline;
+  color: #2575fc;
+  font-weight: bold;
+  margin-left: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.messageConatiner {
+  display: flex;
+  justify-content: center;
+}
+/* Responsive behavior */
+
+/* Show left panel on larger screens */
+@media (min-width: 768px) {
+  .leftContainer {
+    display: block;
+  }
+}
+
+/* Apply gradient background to rightContainer on small screens */
+@media (max-width: 767px) {
+  .rightContainer {
+    background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+  }
+}
