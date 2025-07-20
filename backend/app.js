@@ -8,9 +8,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+const corsOriginURL = process.env.FRONTEND_URL;
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: corsOriginURL,
     credentials: true,
   })
 );
