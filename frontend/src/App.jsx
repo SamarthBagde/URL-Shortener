@@ -5,6 +5,8 @@ import RegisterPage from "./pages/RegisterPage";
 import LinksPage from "./pages/LinksPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectRoute from "./components/ProtectRoute";
+import NotFoundErrorPage from "./pages/NotFoundErrorPage";
+import RedirectPage from "./pages/RedirectPage";
 
 function App() {
   return (
@@ -36,6 +38,10 @@ function App() {
             </ProtectRoute>
           }
         />
+
+        <Route path="/:shortId" element={<RedirectPage />} />
+
+        <Route path="*" element={<NotFoundErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
