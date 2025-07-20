@@ -1,0 +1,68 @@
+.linksConatiner {
+  display: flex;
+  flex-direction: column;
+}
+
+.optionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  max-width: 880px;
+  margin: 0 auto;
+  gap: 12px;
+}
+
+.optionsContainer input[type="text"] {
+  flex: 1;
+  min-width: 240px;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.optionsContainer input[type="text"]:focus {
+  border-color: #2575fc;
+}
+
+.optionsContainer button {
+  padding: 10px 16px;
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.optionsContainer button:hover {
+  background-color: #1a5edb;
+}
+
+.linksConatiner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px 40px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.noDataMsg {
+  text-align: center;
+  margin: 40px auto;
+
+  font-size: 24px;
+}
+
+.msgConatiner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
