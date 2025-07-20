@@ -36,6 +36,8 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
     userId,
   });
 
+  await redisClient.del(`user:urls:${userId}`);
+
   res.status(200).json({
     status: "success",
     data: {
@@ -169,6 +171,7 @@ export const deleteUrl = asyncHandler(async (req, res, next) => {
 
   const url = await urlModel.findOneAndDelete({ _id: urlId, userId });
   await redisClient.del(`shortId:${url.shortId}`);
+  await redisClient.del(`user:urls:${userId}`);
 
   if (!url) {
     return next(
