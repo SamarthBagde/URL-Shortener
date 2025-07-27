@@ -57,7 +57,7 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
   //if hit return res
 
   if (cachedUrl) {
-    return res.status(200).json({
+    return res.status(301).json({
       status: "success",
       type: "cached",
       destinationUrl: cachedUrl,
@@ -77,7 +77,7 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
 
   //return res
 
-  res.status(200).json({
+  res.status(301).json({
     status: "success",
     destinationUrl: data.destinationUrl,
   });
