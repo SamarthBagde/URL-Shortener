@@ -42,7 +42,7 @@ export const createShortUrl = asyncHandler(async (req, res, next) => {
     status: "success",
     data: {
       data,
-      shortUrl: `localhost:3000/${shortId}`,
+      shortUrl: `localhost:5173/${shortId}`,
     },
   });
 });
@@ -57,7 +57,7 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
   //if hit return res
 
   if (cachedUrl) {
-    return res.status(301).json({
+    return res.status(200).json({
       status: "success",
       type: "cached",
       destinationUrl: cachedUrl,
@@ -77,7 +77,7 @@ export const redirectTorignal = asyncHandler(async (req, res, next) => {
 
   //return res
 
-  res.status(301).json({
+  res.status(200).json({
     status: "success",
     destinationUrl: data.destinationUrl,
   });

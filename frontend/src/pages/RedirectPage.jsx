@@ -20,7 +20,7 @@ const RedirectPage = () => {
           window.location.href = res.data.destinationUrl;
         }
       } catch (error) {
-        console.log(error);
+        console.log("💥💥", error);
         const message =
           error.response?.data?.message ||
           "Failed to redirect. Please try again.";
