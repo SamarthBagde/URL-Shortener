@@ -14,7 +14,7 @@ app.use(
   cors({
     origin: corsOriginURL,
     credentials: true,
-  })
+  }),
 );
 
 app.use("/api/user", userRouter);
@@ -23,3 +23,5 @@ app.use("/api/url", urlRouter);
 app.use(errorHandler);
 
 export default app;
+
+// this is the end of file
